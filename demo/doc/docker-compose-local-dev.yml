@@ -4,10 +4,11 @@ services:
     build:
       context: ./../../
     container_name: manga_image_translator_localdev
-    command: --verbose --translator=offline --log-web --mode web --manga2eng --use-inpainting --host=0.0.0.0 --port=5003 # (FOR GPU) --use-gpu
+    #command: --verbose --translator=offline --log-web --mode web --manga2eng --use-inpainting --host=0.0.0.0 --port=5003 # (FOR GPU) --use-gpu
     # Batch Mode
-    #command: --mode=batch --verbose --translator=offline --target-lang=ENG --manga2eng --use-inpainting --image "/app/Manga"# (FOR GPU) --use-gpu
+    command: --mode=batch --verbose --translator=offline --overwrite --target-lang=ENG --manga2eng -i "/app/Manga" --model-dir /app/models # (FOR GPU) --use-gpu
     volumes:
+    
       - ./../../result:/app/result
       - ./../../detection:/app/detection
       - ./../../fonts:/app/fonts
@@ -21,11 +22,16 @@ services:
       - ./../../translate_demo.py:/app/translate_demo.py
       - ./../../web_main.py:/app/web_main.py
       - ./../../ui.html:/app/ui.html
+      - ./../../app/models:/app/models
       - facehuggingcache:/root/.cache/huggingface/
-
+      
     #  # For Batch Mode
-    #  - ./../../Manga:/app/Manga
-    #  - ./../../Manga-translated:/app/Manga-translated
+    # - ./../../Manga-translated:/app/Manga-translated
+    # - ./../../Manga:/app/Manga
+    # /app/models/translators
+    
+      - ./../../working/input:/app/Manga
+      - ./../../working/MTL-translated:/app/Manga-translated
     ports:
       - 5003:5003
 
